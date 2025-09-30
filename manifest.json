@@ -1,0 +1,30 @@
+{
+    "format_version":  2,
+    "header":  {
+                   "description":  "Test_Pack.mcpack behavior pack - Makes cows aggressive!",
+                   "name":  "Test Pack.mcpack",
+                   "uuid":  "21afbea0-b472-4a52-92de-d4e09a6d925e",
+                   "version":  [
+                                   1,
+                                   0,
+                                   0
+                               ],
+                   "min_engine_version":  [
+                                              1,
+                                              16,
+                                              0
+                                          ]
+               },
+    "modules":  [
+                    {
+                        "description":  "My First Add-On Hello!",
+                        "type":  "data",
+                        "uuid":  "85639f48-d377-4530-b6a9-2d408decdfab",
+                        "version":  [
+                                        1,
+                                        0,
+                                        0
+                                    ]
+                    }
+                ]
+}

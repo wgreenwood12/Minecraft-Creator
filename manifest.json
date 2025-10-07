@@ -1,13 +1,13 @@
 {
     "format_version":  2,
     "header":  {
-                   "description":  "Angry_Cow_Complete - Angry cow behavior with spawn eggs",
-                   "name":  "Angry_Cow_Complete Behavior Pack",
-                   "uuid":  "3e9e07bc-bcc8-4487-9ad2-2c671f3382f6",
+                   "description":  "Angry_Cow_V2 behavior pack - Makes cows aggressive!",
+                   "name":  "Angry Cow V2",
+                   "uuid":  "dcc28cbb-95ab-49cb-bd44-7c62c55bb03e",
                    "version":  [
-                                   1,
-                                   0,
-                                   0
+                                   2,
+                                   3,
+                                   4
                                ],
                    "min_engine_version":  [
                                               1,
@@ -19,11 +19,11 @@
                     {
                         "description":  "Angry Cow Behavior Data",
                         "type":  "data",
-                        "uuid":  "9fd85c5b-8041-4bba-90ce-fa938d110151",
+                        "uuid":  "0d5d84e0-1b22-453f-bbf5-698f8f7a008e",
                         "version":  [
-                                        1,
-                                        0,
-                                        0
+                                        2,
+                                        3,
+                                        4
                                     ]
                     }
                 ]

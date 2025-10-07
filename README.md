@@ -17,7 +17,7 @@ Minecraft-Creator/
 ├── Angry_Cow_BP.mcpack           # Exported behavior pack file (for Minecraft import)
 ├── Test_Pack.mcpack              # Another exported pack file (for Minecraft import)
 ├── entities/
-│   └── cow.json                  # Defines the custom Angry Cow entity and its behaviors
+│   └── angry_cow.json            # Defines the custom Angry Cow entity and its behaviors
 ├── items/
 │   └── angry_cow_spawn_egg.json  # Defines the Angry Cow spawn egg item
 ├── recipes/
@@ -38,7 +38,7 @@ Minecraft-Creator/
 - **manifest.json**: Required metadata for Minecraft to recognize the pack.
 - **generate_and_build.ps1**: Automates UUID generation and pack building.
 - **README.md**: Documentation and instructions.
-- **entities/cow.json**: Defines the Angry Cow entity and its behaviors.
+-- **entities/angry_cow.json**: Defines the Angry Cow entity and its behaviors.
 - **items/angry_cow_spawn_egg.json**: Defines the spawn egg item for Angry Cow.
 - **recipes/angry_cow_spawn_egg.json**: Crafting recipe for the spawn egg.
 - **loot_tables/entities/myaddon/angry_cow.json**: Loot table for Angry Cow.

@@ -3,7 +3,8 @@
 # Usage: .\generate_and_build.ps1 [pack_name]
 
 param(
-    [string]$PackName = "Angry_Cow_BP"
+    [Parameter(Position=0)] [string]$Version = "1.0.0",
+    [Parameter(Position=1)] [string]$PackName = "Angry_Cow_BP"
 )
 
 Write-Host "Generating new UUIDs and building pack..." -ForegroundColor Green
@@ -12,6 +13,8 @@ Write-Host "Generating new UUIDs and building pack..." -ForegroundColor Green
 function New-UUID {
     return [System.Guid]::NewGuid().ToString()
 }
+
+$PackVersion = $Version
 
 # Generate two new UUIDs
 $headerUUID = New-UUID
@@ -27,11 +30,29 @@ if (-not (Test-Path $manifestPath)) {
     exit 1
 }
 
+
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 
 # Update UUIDs
 $manifest.header.uuid = $headerUUID
 $manifest.modules[0].uuid = $moduleUUID
+
+# Parse version string into 3 integers (pad/truncate as necessary)
+function Convert-VersionToArray($v) {
+    $parts = $v -split '\.'
+    $nums = @()
+    for ($i = 0; $i -lt 3; $i++) {
+        if ($i -lt $parts.Length) {
+            $n = 0
+            if ([int]::TryParse($parts[$i], [ref]$n)) { $nums += $n } else { $nums += 0 }
+        } else {
+            $nums += 0
+        }
+    }
+    return ,$nums
+}
+
+$versionArray = Convert-VersionToArray $PackVersion
 
 # Update pack name if different from default
 if ($PackName -ne "Angry_Cow_BP") {
@@ -39,18 +60,29 @@ if ($PackName -ne "Angry_Cow_BP") {
     $manifest.header.description = "$PackName behavior pack - Makes cows aggressive!"
 }
 
+# Update version arrays in manifest
+$manifest.header.version = $versionArray
+$manifest.modules[0].version = $versionArray
+
 # Write updated manifest back to file
 $manifest | ConvertTo-Json -Depth 10 | Set-Content $manifestPath
 
 Write-Host "Updated manifest.json with new UUIDs" -ForegroundColor Yellow
 
-# Define the output filename
+# Define the output filename and worlds directory
 $mcpackName = if ($PackName.EndsWith(".mcpack")) { $PackName } else { "$PackName.mcpack" }
+$outputDir = "worlds"
 
-# Remove existing mcpack file if it exists
-if (Test-Path $mcpackName) {
-    Write-Host "Removing existing $mcpackName..." -ForegroundColor Yellow
-    Remove-Item $mcpackName -Force
+# Ensure output directory exists
+if (-not (Test-Path $outputDir)) {
+    New-Item -ItemType Directory -Path $outputDir | Out-Null
+}
+
+# Remove existing mcpack file in the output directory if it exists
+$destPath = Join-Path -Path $outputDir -ChildPath $mcpackName
+if (Test-Path $destPath) {
+    Write-Host "Removing existing $destPath..." -ForegroundColor Yellow
+    Remove-Item $destPath -Force
 }
 
 # Define the files and folders to include in the pack
@@ -79,22 +111,24 @@ if ($missingItems.Count -gt 0) {
     exit 1
 }
 
-# Create temporary zip file
+# Create temporary zip file and move it to outputDir as .mcpack
 $tempZip = "temp_pack.zip"
-Write-Host "Creating $mcpackName..." -ForegroundColor Cyan
+Write-Host "Creating $mcpackName in $outputDir..." -ForegroundColor Cyan
 
 try {
     Compress-Archive -Path $packItems -DestinationPath $tempZip -Force
-    Rename-Item $tempZip $mcpackName
-    
-    Write-Host "SUCCESS! Created $mcpackName with unique UUIDs" -ForegroundColor Green
+    # Move and rename to the worlds folder with .mcpack extension
+    Move-Item -Path $tempZip -Destination $destPath -Force
+
+    Write-Host "SUCCESS! Created $destPath with unique UUIDs" -ForegroundColor Green
     Write-Host ""
     Write-Host "Pack Details:" -ForegroundColor Yellow
     Write-Host "  Name: $($manifest.header.name)" -ForegroundColor White
+    Write-Host "  Version: $PackVersion" -ForegroundColor White
     Write-Host "  Header UUID: $headerUUID" -ForegroundColor White
     Write-Host "  Module UUID: $moduleUUID" -ForegroundColor White
     Write-Host ""
-    Write-Host "This pack can now be installed alongside other versions!" -ForegroundColor Green
+    Write-Host "The pack has been output to the 'worlds' folder." -ForegroundColor Green
 } catch {
     Write-Host "ERROR: Failed to create pack - $($_.Exception.Message)" -ForegroundColor Red
     if (Test-Path $tempZip) {

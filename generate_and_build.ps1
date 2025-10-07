@@ -34,6 +34,13 @@ if (-not (Test-Path $manifestPath)) {
 
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 
+Write-Host "Using manifest: $manifestPath" -ForegroundColor Magenta
+
+# Backup the manifest before modifying
+$backupPath = "$manifestPath.bak"
+Copy-Item -Path $manifestPath -Destination $backupPath -Force
+Write-Host "Backed up original manifest to: $backupPath" -ForegroundColor DarkCyan
+
 # Update UUIDs
 $manifest.header.uuid = $headerUUID
 $manifest.modules[0].uuid = $moduleUUID
@@ -140,3 +147,5 @@ try {
     }
     exit 1
 }
+
+# End of script

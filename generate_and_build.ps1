@@ -4,7 +4,8 @@
 
 param(
     [Parameter(Position=0)] [string]$Version = "1.0.0",
-    [Parameter(Position=1)] [string]$PackName = "Angry_Cow_BP"
+    [Parameter(Position=1)] [string]$PackName = "Angry_Cow_BP",
+    [Parameter(Position=2)] [string]$SourceDir = "."
 )
 
 Write-Host "Generating new UUIDs and building pack..." -ForegroundColor Green
@@ -23,13 +24,13 @@ $moduleUUID = New-UUID
 Write-Host "Generated Header UUID: $headerUUID" -ForegroundColor Cyan
 Write-Host "Generated Module UUID: $moduleUUID" -ForegroundColor Cyan
 
-# Read the current manifest.json
-$manifestPath = "manifest.json"
+# Resolve source directory and read the current manifest.json
+$SourceDir = (Resolve-Path -Path $SourceDir).ProviderPath
+$manifestPath = Join-Path -Path $SourceDir -ChildPath "manifest.json"
 if (-not (Test-Path $manifestPath)) {
-    Write-Host "ERROR: manifest.json not found!" -ForegroundColor Red
+    Write-Host "ERROR: manifest.json not found in SourceDir: $SourceDir" -ForegroundColor Red
     exit 1
 }
-
 
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 
@@ -92,20 +93,20 @@ if (Test-Path $destPath) {
     Remove-Item $destPath -Force
 }
 
-# Define the files and folders to include in the pack
+# Define the files and folders to include in the pack (absolute paths)
 $packItems = @(
-    "manifest.json",
-    "entities",
-    "spawn_rules",
-    "items",
-    "recipes"
+    (Join-Path -Path $SourceDir -ChildPath "manifest.json"),
+    (Join-Path -Path $SourceDir -ChildPath "entities"),
+    (Join-Path -Path $SourceDir -ChildPath "spawn_rules"),
+    (Join-Path -Path $SourceDir -ChildPath "items"),
+    (Join-Path -Path $SourceDir -ChildPath "recipes")
 )
 
 # Check if all required files exist
 $missingItems = @()
 foreach ($item in $packItems) {
     if (-not (Test-Path $item)) {
-        $missingItems += $item
+        $missingItems += (Split-Path -Path $item -Leaf)
     }
 }
 
@@ -117,12 +118,19 @@ if ($missingItems.Count -gt 0) {
     exit 1
 }
 
-# Create temporary zip file and move it to outputDir as .mcpack
-$tempZip = "temp_pack.zip"
+# Create temporary zip file (placed inside SourceDir) and move it to outputDir as .mcpack
+$tempZip = Join-Path -Path $SourceDir -ChildPath "temp_pack.zip"
 Write-Host "Creating $mcpackName in $outputDir..." -ForegroundColor Cyan
 
 try {
-    Compress-Archive -Path $packItems -DestinationPath $tempZip -Force
+    # Compress files from the SourceDir using relative paths so archive layout is correct
+    $relativePack = @("manifest.json","entities","spawn_rules","items","recipes")
+    Push-Location $SourceDir
+    try {
+        Compress-Archive -Path $relativePack -DestinationPath $tempZip -Force
+    } finally {
+        Pop-Location
+    }
     # Move and rename to the worlds folder with .mcpack extension
     Move-Item -Path $tempZip -Destination $destPath -Force
 

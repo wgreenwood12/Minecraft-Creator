@@ -1,9 +1,9 @@
 {
     "format_version":  2,
     "header":  {
-                   "description":  "Test_Pack.mcpack behavior pack - Makes cows aggressive!",
-                   "name":  "Test Pack.mcpack",
-                   "uuid":  "21afbea0-b472-4a52-92de-d4e09a6d925e",
+                   "description":  "Angry_Cow_Complete - Angry cow behavior with spawn eggs",
+                   "name":  "Angry_Cow_Complete Behavior Pack",
+                   "uuid":  "3e9e07bc-bcc8-4487-9ad2-2c671f3382f6",
                    "version":  [
                                    1,
                                    0,
@@ -17,9 +17,9 @@
                },
     "modules":  [
                     {
-                        "description":  "My First Add-On Hello!",
+                        "description":  "Angry Cow Behavior Data",
                         "type":  "data",
-                        "uuid":  "85639f48-d377-4530-b6a9-2d408decdfab",
+                        "uuid":  "9fd85c5b-8041-4bba-90ce-fa938d110151",
                         "version":  [
                                         1,
                                         0,

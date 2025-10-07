@@ -8,20 +8,42 @@ This behavior pack makes cows in Minecraft Bedrock Edition aggressive and hostil
 - Maintains normal cow breeding, aging, and loot mechanics
 - Compatible with Minecraft Bedrock 1.21+
 
-## File Structure
+## File Structure & Explanation
 ```
 Minecraft-Creator/
-├── manifest.json                           # Pack metadata and dependencies
+├── manifest.json                 # Main pack metadata (name, description, UUIDs, version)
+├── generate_and_build.ps1        # PowerShell script to build/export the pack and generate new UUIDs
+├── README.md                     # Project documentation and instructions
+├── Angry_Cow_BP.mcpack           # Exported behavior pack file (for Minecraft import)
+├── Test_Pack.mcpack              # Another exported pack file (for Minecraft import)
 ├── entities/
-│   └── cow.json                           # Angry cow entity definition
+│   └── cow.json                  # Defines the custom Angry Cow entity and its behaviors
+├── items/
+│   └── angry_cow_spawn_egg.json  # Defines the Angry Cow spawn egg item
+├── recipes/
+│   └── angry_cow_spawn_egg.json  # Crafting recipe for the Angry Cow spawn egg
 ├── loot_tables/
 │   └── entities/
+│       ├── cow.json              # Loot table for vanilla cow (if overridden)
 │       └── myaddon/
-│           └── angry_cow.json             # Loot drops for angry cow
-└── spawn_rules/
-    └── myaddon/
-        └── angry_cow.json                 # Spawn conditions
+│           └── angry_cow.json    # Loot table for Angry Cow (drops when killed)
+├── spawn_rules/
+│   └── myaddon/
+│       └── angry_cow.json        # Natural spawn conditions for Angry Cow
+├── examples/
+│   └── cow.json                  # Example entity file (for reference/testing)
 ```
+
+### What Each File/Folder Does
+- **manifest.json**: Required metadata for Minecraft to recognize the pack.
+- **generate_and_build.ps1**: Automates UUID generation and pack building.
+- **README.md**: Documentation and instructions.
+- **entities/cow.json**: Defines the Angry Cow entity and its behaviors.
+- **items/angry_cow_spawn_egg.json**: Defines the spawn egg item for Angry Cow.
+- **recipes/angry_cow_spawn_egg.json**: Crafting recipe for the spawn egg.
+- **loot_tables/entities/myaddon/angry_cow.json**: Loot table for Angry Cow.
+- **spawn_rules/myaddon/angry_cow.json**: Natural spawn rules for Angry Cow.
+- **examples/cow.json**: Example entity file for reference.
 
 ## How to Package and Install
 

@@ -57,7 +57,10 @@ if (Test-Path $mcpackName) {
 $packItems = @(
     "manifest.json",
     "entities",
-    "loot_tables"
+    "loot_tables",
+    "spawn_rules",
+    "items",
+    "recipes"
 )
 
 # Check if all required files exist

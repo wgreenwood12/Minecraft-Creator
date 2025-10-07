@@ -3,7 +3,7 @@
     "header":  {
                    "description":  "AngryCowTest behavior pack - Makes cows aggressive!",
                    "name":  "AngryCowTest",
-                   "uuid":  "82a9129c-aad9-4508-9684-792ebaa76390",
+                   "uuid":  "142b2a9c-6549-4542-b9e7-cb9b14b22a48",
                    "version":  [
                                    3,
                                    0,
@@ -11,15 +11,15 @@
                                ],
                    "min_engine_version":  [
                                               1,
-                                              21,
-                                              90
+                                              16,
+                                              0
                                           ]
                },
     "modules":  [
                     {
                         "description":  "Angry Cow Behavior Data",
                         "type":  "data",
-                        "uuid":  "1a1cb8be-8f8f-4d38-aae6-1016a4f71886",
+                        "uuid":  "8749e8fc-d582-4ac6-9cab-6d150cf41808",
                         "version":  [
                                         3,
                                         0,

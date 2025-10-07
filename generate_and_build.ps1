@@ -4,7 +4,8 @@
 
 param(
     [Parameter(Position=0)] [string]$Version = "1.0.0",
-    [Parameter(Position=1)] [string]$PackName = "Angry_Cow_BP"
+    [Parameter(Position=1)] [string]$PackName = "Angry_Cow_BP",
+    [Parameter(Position=2)] [string]$SourceDir = "."
 )
 
 Write-Host "Generating new UUIDs and building pack..." -ForegroundColor Green
@@ -23,13 +24,13 @@ $moduleUUID = New-UUID
 Write-Host "Generated Header UUID: $headerUUID" -ForegroundColor Cyan
 Write-Host "Generated Module UUID: $moduleUUID" -ForegroundColor Cyan
 
-# Read the current manifest.json
-$manifestPath = "manifest.json"
+# Resolve source directory (the folder that contains manifest.json and pack content)
+$sourceRoot = Resolve-Path -Path $SourceDir | Select-Object -ExpandProperty Path
+$manifestPath = Join-Path -Path $sourceRoot -ChildPath 'manifest.json'
 if (-not (Test-Path $manifestPath)) {
-    Write-Host "ERROR: manifest.json not found!" -ForegroundColor Red
+    Write-Host "ERROR: manifest.json not found in source directory '$sourceRoot'!" -ForegroundColor Red
     exit 1
 }
-
 
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 
@@ -64,7 +65,7 @@ if ($PackName -ne "Angry_Cow_BP") {
 $manifest.header.version = $versionArray
 $manifest.modules[0].version = $versionArray
 
-# Write updated manifest back to file
+# Write updated manifest back to the source manifest
 $manifest | ConvertTo-Json -Depth 10 | Set-Content $manifestPath
 
 Write-Host "Updated manifest.json with new UUIDs" -ForegroundColor Yellow
@@ -95,16 +96,17 @@ $packItems = @(
     "recipes"
 )
 
-# Check if all required files exist
+# Check if all required files exist in the source directory
 $missingItems = @()
 foreach ($item in $packItems) {
-    if (-not (Test-Path $item)) {
+    $full = Join-Path -Path $sourceRoot -ChildPath $item
+    if (-not (Test-Path $full)) {
         $missingItems += $item
     }
 }
 
 if ($missingItems.Count -gt 0) {
-    Write-Host "ERROR: Missing required files/folders:" -ForegroundColor Red
+    Write-Host "ERROR: Missing required files/folders in source directory ($sourceRoot):" -ForegroundColor Red
     foreach ($missing in $missingItems) {
         Write-Host "  - $missing" -ForegroundColor Red
     }
@@ -113,12 +115,14 @@ if ($missingItems.Count -gt 0) {
 
 # Create temporary zip file and move it to outputDir as .mcpack
 $tempZip = "temp_pack.zip"
-Write-Host "Creating $mcpackName in $outputDir..." -ForegroundColor Cyan
+Write-Host "Creating $mcpackName from source '$sourceRoot' in $outputDir..." -ForegroundColor Cyan
 
 try {
-    Compress-Archive -Path $packItems -DestinationPath $tempZip -Force
+    Push-Location $sourceRoot
+    Compress-Archive -Path $packItems -DestinationPath (Join-Path $sourceRoot $tempZip) -Force
+    Pop-Location
     # Move and rename to the worlds folder with .mcpack extension
-    Move-Item -Path $tempZip -Destination $destPath -Force
+    Move-Item -Path (Join-Path $sourceRoot $tempZip) -Destination $destPath -Force
 
     Write-Host "SUCCESS! Created $destPath with unique UUIDs" -ForegroundColor Green
     Write-Host ""

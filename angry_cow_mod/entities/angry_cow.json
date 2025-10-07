@@ -134,7 +134,7 @@
       },
       "minecraft:behavior.panic": {
         "priority": 1,
-        "speed_multiplier": 1.25
+          "speed_multiplier": 1.25
       },
       "minecraft:behavior.mount_pathing": {
         "priority": 2,

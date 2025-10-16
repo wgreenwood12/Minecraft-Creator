@@ -97,9 +97,9 @@ if (Test-Path $destPath) {
 $packItems = @(
     (Join-Path -Path $SourceDir -ChildPath "manifest.json"),
     (Join-Path -Path $SourceDir -ChildPath "entities"),
-    (Join-Path -Path $SourceDir -ChildPath "spawn_rules"),
-    (Join-Path -Path $SourceDir -ChildPath "items"),
-    (Join-Path -Path $SourceDir -ChildPath "recipes")
+    (Join-Path -Path $SourceDir -ChildPath "spawn_rules")
+    # (Join-Path -Path $SourceDir -ChildPath "items"),
+    # (Join-Path -Path $SourceDir -ChildPath "recipes")
 )
 
 # Check if all required files exist
@@ -124,7 +124,7 @@ Write-Host "Creating $mcpackName in $outputDir..." -ForegroundColor Cyan
 
 try {
     # Compress files from the SourceDir using relative paths so archive layout is correct
-    $relativePack = @("manifest.json","entities","spawn_rules","items","recipes")
+    $relativePack = @("manifest.json","entities","spawn_rules")
     Push-Location $SourceDir
     try {
         Compress-Archive -Path $relativePack -DestinationPath $tempZip -Force

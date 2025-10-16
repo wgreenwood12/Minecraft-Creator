@@ -1,13 +1,13 @@
 {
     "format_version":  2,
     "header":  {
-                   "description":  "AngryCowTestV21 behavior pack - Makes cows aggressive!",
-                   "name":  "AngryCowTestV21",
-                   "uuid":  "cda2acdb-32ad-440c-a522-63375a5146de",
+                   "description":  "skeletonTest behavior pack - Makes cows aggressive!",
+                   "name":  "skeletonTest",
+                   "uuid":  "205b1fb4-11ee-49b5-9f3a-1cda2a9d72e5",
                    "version":  [
                                    3,
                                    0,
-                                   6
+                                   1
                                ],
                    "min_engine_version":  [
                                               1,
@@ -17,13 +17,13 @@
                },
     "modules":  [
                     {
-                        "description":  "Angry Cow Behavior Data",
+                        "description":  "Melee Skeleton Behavior Data",
                         "type":  "data",
-                        "uuid":  "5b09bca4-0f07-4a8b-9231-5efd1d9ba23a",
+                        "uuid":  "f9b4a956-348a-4b68-ad85-0e5ac1be33c7",
                         "version":  [
                                         3,
                                         0,
-                                        6
+                                        1
                                     ]
                     }
                 ]
